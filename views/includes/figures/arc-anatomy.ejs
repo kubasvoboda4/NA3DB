@@ -1,0 +1,31 @@
+<%#
+  The arc picture, taken apart. Drawn with the same classes the real picture
+  uses (public/style.css, .arc_*), so the colours here are the colours there.
+%>
+<svg class="fig" viewBox="0 0 600 180" role="img"
+     aria-label="A molecule drawn as a line, with its base pairs as arcs above and below it">
+    <%# The molecule: one line, 5' on the left. %>
+    <path class="arc_strand" d="M 60 120 H 540"/>
+    <text class="arc_name arc_end" x="52" y="124">5′</text>
+    <text class="arc_name" x="548" y="124">3′</text>
+
+    <%# A stem: three canonical pairs nested inside one another. %>
+    <path class="arc_wc" fill="none" stroke-width="2.2" d="M 100 120 C 100 36 260 36 260 120"/>
+    <path class="arc_wc" fill="none" stroke-width="2.2" d="M 120 120 C 120 50 240 50 240 120"/>
+    <path class="arc_wc" fill="none" stroke-width="2.2" d="M 140 120 C 140 64 220 64 220 120"/>
+
+    <%# A wobble, in its own colour. %>
+    <path class="arc_gu" fill="none" stroke-width="2.2" d="M 300 120 C 300 72 360 72 360 120"/>
+
+    <%# A pair that crosses the stem: drawn under the line, so the secondary
+        structure above stays readable. %>
+    <path class="arc_nc" fill="none" stroke-width="2.2" d="M 180 120 C 180 176 460 176 460 120"/>
+
+    <%# A modified nucleotide sits on the line as a dot. %>
+    <circle class="fig_dot" cx="420" cy="120" r="4.5"/>
+
+    <text class="fig_label fig_mid" x="180" y="26">a stem</text>
+    <text class="fig_label fig_mid" x="330" y="62">G–U wobble</text>
+    <text class="fig_label fig_mid" x="320" y="172">a crossing pair</text>
+    <text class="fig_label fig_mid" x="420" y="106">modified</text>
+</svg>
