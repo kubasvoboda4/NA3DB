@@ -2389,8 +2389,10 @@ details[open]:not(.help, .entry_fasta) > summary::before { rotate: 90deg; }
     overflow: hidden;
 }
 
-.view_switch button {
+.view_switch button,
+.view_switch a {
     padding: 6px 14px;
+    text-decoration: none;
 
     font: inherit;
     font-size: 12px;
@@ -2403,15 +2405,18 @@ details[open]:not(.help, .entry_fasta) > summary::before { rotate: 90deg; }
     cursor: pointer;
 }
 
-.view_switch button + button {
+.view_switch button + button,
+.view_switch a + a {
     border-left: 1px solid var(--input-border);
 }
 
-.view_switch button:hover {
+.view_switch button:hover,
+.view_switch a:hover {
     color: var(--text);
 }
 
-.view_switch button[aria-pressed="true"] {
+.view_switch button[aria-pressed="true"],
+.view_switch a[aria-pressed="true"] {
     color: var(--on-accent);
     background-color: var(--accent);
 }
@@ -4545,4 +4550,309 @@ path.arc_nc { stroke: var(--pair-nc); }
     #views .view_tile[aria-selected="true"] .view_what { display: block; position: absolute; left: 0; bottom: 0; font-size: 13px; }
     /* Always in sight, so not in the list of places to go. */
     .section_nav .group_views { display: none; }
+}
+
+
+/* <---------------------help---------------------------> */
+
+/* One column of prose, held to a comfortable measure and away from the edges.
+   The level switch is in the header band, beside the heading. */
+.help_page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 28px 24px 64px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+}
+
+/* The level switch, centred over the text it decides. */
+.help_levels {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 26px;
+}
+
+.help_levels .view_switch { font-size: 13px; }
+
+.help_who {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.help_blurb {
+    margin: 6px 0 0;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--text-muted);
+}
+
+/* The sections of this level, to jump by. Quiet: it is a map, not the text. */
+.help_contents {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+}
+
+.help_contents a {
+    padding: 3px 10px;
+    border: 1px solid var(--border-dark);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+.help_contents a:hover {
+    background: var(--accent-wash);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.help_section {
+    margin-top: 34px;
+    scroll-margin-top: 16px;
+}
+
+.help_section h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* The heading is its own link, so one answer can be pointed at. The address
+   shows only on hover, as the structure page's section links do. */
+.help_section h2 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.help_section h2 a:hover { color: var(--accent); }
+
+.help_section p { margin: 0 0 12px; }
+
+.help_section ul,
+.help_section ol {
+    margin: 0 0 12px;
+    padding-left: 22px;
+}
+
+.help_section li { margin-bottom: 6px; }
+
+.help_section a { color: var(--accent); }
+
+.help_section code {
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+    font-size: 0.92em;
+}
+
+/* A table wider than the column scrolls inside its own box rather than
+   widening the page. */
+/* A drawing and the words under it. The figures are inline SVG, so they take
+   the page's colours: the arc figure borrows the real picture's own classes,
+   and the rest use the .fig_ set below. */
+.help_figure {
+    margin: 0 0 18px;
+    padding: 16px 14px 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+}
+
+.help_figure figcaption {
+    margin-top: 10px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--text-muted);
+}
+
+/* Room kept for a picture. Dashed, so it reads as a gap on purpose; floated,
+   so the paragraphs beside it break up the column. */
+.help_slot {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+
+    width: 44%;
+    min-height: 150px;
+    margin: 4px 0 16px;
+    padding: 16px;
+
+    border: 1px dashed var(--border-dark);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    text-align: center;
+}
+
+.help_slot_right { float: right; margin-left: 22px; }
+.help_slot_left  { float: left;  margin-right: 22px; }
+
+.help_slot_mark {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+.help_slot figcaption {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+/* A floated picture never hangs out of its section into the next heading. */
+.help_section::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/* Artwork kept as a file. It is drawn on white paper, so it keeps that in
+   both themes: tinting a figure would change the colours it is explaining. */
+.help_image { padding: 0; background: #fff; }
+
+.help_image img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.help_image figcaption {
+    margin: 0;
+    padding: 10px 14px 12px;
+    background: var(--bg-secondary);
+}
+
+.fig {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.fig_label {
+    font-size: 11px;
+    fill: var(--text-muted);
+}
+
+.fig_note {
+    font-size: 10.5px;
+    fill: var(--text-dim);
+}
+
+.fig_row {
+    font-size: 11px;
+    font-weight: 600;
+    fill: var(--text-dim);
+}
+
+.fig_mid { text-anchor: middle; }
+.fig_end { text-anchor: end; }
+
+.fig_dot { fill: var(--pair-mod); }
+
+/* One base, as the Leontis-Westhof scheme draws it. */
+.fig_base {
+    fill: var(--accent-wash);
+    stroke: var(--accent);
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+}
+
+/* A backbone step in the sequence map figure. The real map colours each bar
+   by its NtC class; here one colour carries the shape of the row. */
+.fig_bar { fill: var(--accent); opacity: 0.75; }
+
+.fig_seq {
+    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+    font-size: 13px;
+    fill: var(--text);
+}
+
+.fig_seq_mod { fill: var(--pair-mod); font-weight: 600; }
+
+.fig_bracket {
+    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+    font-size: 13px;
+    fill: var(--text-muted);
+}
+
+.help_table_scroll {
+    overflow-x: auto;
+    margin: 0 0 14px;
+}
+
+.help_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.help_table th,
+.help_table td {
+    padding: 7px 10px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+}
+
+.help_table th {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    white-space: nowrap;
+}
+
+/* The name column: given a share of the width and allowed to wrap. Held to
+   one line it would take half the table for the one row that lists nine
+   parameter names, and squeeze what they mean into a column an inch wide. */
+.help_table td:first-child {
+    width: 34%;
+    overflow-wrap: anywhere;
+}
+
+.help_code {
+    margin: 0 0 14px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-secondary);
+    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+.help_code code { padding: 0; border: none; background: none; font-size: inherit; }
+
+.help_next {
+    margin-top: 40px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.help_next a { color: var(--accent); }
+
+@media (max-width: 1023px) {
+    .help_page { padding: 20px 16px 48px; }
+    /* Too narrow to read beside a picture: the gap takes the full width. */
+    .help_slot { float: none; width: 100%; margin-left: 0; margin-right: 0; }
+    .help_table td:first-child { width: auto; }
 }

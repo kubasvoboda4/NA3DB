@@ -1,0 +1,28 @@
+<%#
+  The three edges of a base, and what cis and trans mean. The naming scheme
+  behind every family name on the site: cWW, tHS and the rest.
+%>
+<svg class="fig" viewBox="0 0 600 230" role="img"
+     aria-label="A base drawn as a triangle with its Watson-Crick, Hoogsteen and sugar edges named, and the difference between a cis and a trans pair">
+    <%# One base, as the scheme draws it: a triangle, one edge each. %>
+    <g transform="translate(140 112)">
+        <path class="fig_base" d="M -58 -48 L 58 -48 L 0 52 Z"/>
+        <text class="fig_label fig_mid" x="0" y="-58">Hoogsteen edge (H)</text>
+        <text class="fig_label" x="68" y="-10">Watson–Crick (W)</text>
+        <text class="fig_label fig_end" x="-68" y="-10">sugar edge (S)</text>
+        <text class="fig_note fig_mid" x="0" y="-14">base</text>
+    </g>
+
+    <%# Two bases meeting. Both pointing the same way is cis, the two sugar
+        edges on one side of the pair; one turned over is trans. %>
+    <g transform="translate(430 62)">
+        <path class="fig_base" d="M -72 -24 L -12 -24 L -42 24 Z"/>
+        <path class="fig_base" d="M 12 -24 L 72 -24 L 42 24 Z"/>
+        <text class="fig_label fig_mid" x="0" y="48">cis: the sugars one side</text>
+    </g>
+    <g transform="translate(430 160)">
+        <path class="fig_base" d="M -72 -24 L -12 -24 L -42 24 Z"/>
+        <path class="fig_base" d="M 12 24 L 72 24 L 42 -24 Z"/>
+        <text class="fig_label fig_mid" x="0" y="48">trans: on opposite sides</text>
+    </g>
+</svg>

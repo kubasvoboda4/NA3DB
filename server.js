@@ -7,6 +7,7 @@ import { search_entries, export_entries, export_molecules, export_ligands, expor
          same_sequence, same_sequence_count, compare_same_sequence, entry_ntc_classes, entry_assemblies } from "./search.js";
 import { query, DatabaseUnavailable } from "./db.js";
 import help from "./help_texts.js";
+import { LEVELS, level_named, rich } from "./help_guide.js";
 import { citation_ris, citation_bibtex, citation_text, unpublished, short_name, full_name } from "./cite.js";
 import { did_you_mean, box_suggestions, warm_box_names } from "./suggest.js";
 import { public_registry, columns_answering, match_mode,
@@ -128,9 +129,17 @@ app.get("/", async (req, res) => {
     res.render("landing", { page: "landing", stats, browse });
 });
 
+// Help, at three depths: the same site explained for a reader new to
+// structure databases, one who knows the chemistry, and one who wants the
+// endpoints. The level is in the address so each is a page to bookmark.
+app.get("/help", (req, res) => {
+    res.render("help", { page: "none", levels: LEVELS, rich,
+                         level: level_named(req.query.level) });
+});
+
 // The footer's pages, linked before they are written. A 200 that says so,
 // not a 404: the link is right, the page is what is missing.
-const UNWRITTEN = { cite: "How to cite", help: "Help", contact: "Contact" };
+const UNWRITTEN = { cite: "How to cite", contact: "Contact" };
 
 for (const [path, heading] of Object.entries(UNWRITTEN)) {
     app.get("/" + path, (req, res) => {

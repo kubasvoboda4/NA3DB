@@ -1,0 +1,31 @@
+<%#
+  The sequence map, taken apart: one column per nucleotide, the backbone step
+  above it, the pairing below it, one row per family.
+%>
+<%
+  const seq   = ["G", "C", "U", "G", "A", "c", "G", "U", "A", "A", "C", "A", "G", "C"];
+  const tall  = [38, 34, 30, 22, 12, 18, 31, 27, 33, 29, 35, 30, 36, 0];
+  const wc    = ["(", "(", "(", ".", ".", ".", ".", ".", ".", ".", ".", ")", ")", ")"];
+  const cww   = [".", ".", ".", "(", ".", ".", ".", ")", ".", ".", ".", ".", ".", "."];
+  const x = (i) => 96 + i * 33;
+%>
+<svg class="fig" viewBox="0 0 600 190" role="img"
+     aria-label="A sequence map: a bar per backbone step, the sequence, then one bracket row per base pair family">
+    <% seq.forEach((letter, i) => { %>
+        <%# The step to the next nucleotide: colour is its NtC class, height
+            its confal score. The last column has no step after it. %>
+        <% if (tall[i]) { %>
+        <rect class="fig_bar" x="<%= x(i) - 11 %>" y="<%= 62 - tall[i] %>" width="22" height="<%= tall[i] %>" rx="2"/>
+        <% } %>
+        <text class="fig_seq fig_mid<%= letter === letter.toLowerCase() ? " fig_seq_mod" : "" %>" x="<%= x(i) %>" y="88"><%= letter %></text>
+        <text class="fig_bracket fig_mid" x="<%= x(i) %>" y="118"><%= wc[i] %></text>
+        <text class="fig_bracket fig_mid" x="<%= x(i) %>" y="144"><%= cww[i] %></text>
+    <% }) %>
+
+    <text class="fig_row fig_end" x="78" y="46">steps</text>
+    <text class="fig_row fig_end" x="78" y="88">seq</text>
+    <text class="fig_row fig_end" x="78" y="118">WC</text>
+    <text class="fig_row fig_end" x="78" y="144">cWW</text>
+
+    <text class="fig_note" x="96" y="172">height is the confal score, colour the NtC class · a lower case letter is a modified nucleotide</text>
+</svg>

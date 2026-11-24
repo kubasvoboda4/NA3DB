@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NA3DB · Help · <%= level.name %></title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="stylesheet" href="/style.css">
+<%- include("includes/theme.ejs") %>
+</head>
+<body>
+    <div class="interface">
+        <%- include("includes/rail.ejs") %>
+
+        <div class="results_area">
+            <div class="results_area_header">
+                <h1>Help</h1>
+            </div>
+
+            <div class="results_area_body">
+                <div class="help_page">
+<%# The same site at three depths, over the text it changes. Real links, not
+    buttons: each level is a page of its own to bookmark, and the choice
+    survives a reload. %>
+                    <div class="help_levels">
+                        <div class="view_switch" role="group" aria-label="How much you already know">
+                        <% for (const l of levels) { %>
+                            <a href="/help?level=<%= l.key %>" aria-pressed="<%= l.key === level.key %>"><%= l.name %></a>
+                        <% } %>
+                        </div>
+                    </div>
+
+                    <p class="help_who"><%= level.who %></p>
+                    <p class="help_blurb"><%= level.blurb %></p>
+
+<%# The sections of this level, and a list of them to jump by. Every heading
+    has its own id, so a link can point at one answer. %>
+                    <nav class="help_contents" aria-label="On this page">
+                    <% for (const s of level.sections) { %>
+                        <a href="#<%= s.id %>"><%= s.title %></a>
+                    <% } %>
+                    </nav>
+
+                <% for (const s of level.sections) { %>
+                    <section class="help_section" id="<%= s.id %>">
+                        <h2><a href="#<%= s.id %>"><%= s.title %></a></h2>
+                    <% for (const part of s.parts) { %>
+                        <% if (part.p) { %>
+                        <p><%- rich(part.p) %></p>
+                        <% } else if (part.list) { %>
+                        <ul>
+                            <% for (const item of part.list) { %><li><%- rich(item) %></li><% } %>
+                        </ul>
+                        <% } else if (part.steps) { %>
+                        <ol>
+                            <% for (const item of part.steps) { %><li><%- rich(item) %></li><% } %>
+                        </ol>
+                        <% } else if (part.table) { %>
+                        <div class="help_table_scroll">
+                            <table class="help_table">
+                                <thead><tr><% for (const h of part.table.head) { %><th><%= h %></th><% } %></tr></thead>
+                                <tbody>
+                                <% for (const row of part.table.rows) { %>
+                                    <tr><% for (const cell of row) { %><td><%- rich(cell) %></td><% } %></tr>
+                                <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } else if (part.figure) { %>
+<%# A drawing, with the words under it. The figures are templates, not image
+    files, so they are drawn in the page's own colours and change with the
+    theme like everything else. %>
+                        <figure class="help_figure">
+                            <%- include("includes/figures/" + part.figure.name) %>
+                            <figcaption><%- rich(part.figure.caption) %></figcaption>
+                        </figure>
+                        <% } else if (part.image) { %>
+<%# A picture kept as a file, drawn on its own paper: it is artwork, so it
+    keeps its own background in both themes rather than being tinted. %>
+                        <figure class="help_figure help_image">
+                            <img src="<%= part.image.src %>" alt="<%= part.image.alt %>" loading="lazy">
+                            <figcaption><%- rich(part.image.caption) %></figcaption>
+                        </figure>
+                        <% } else if (part.slot) { %>
+<%# Room kept for a picture that is not drawn yet. It floats to one side and
+    the text runs past it, so the column is not one long ladder of paragraphs.
+    aria-hidden: there is nothing here to read out yet. %>
+                        <figure class="help_slot help_slot_<%= part.slot.side %>" aria-hidden="true">
+                            <span class="help_slot_mark">Picture</span>
+                            <figcaption><%= part.slot.caption %></figcaption>
+                        </figure>
+                        <% } else if (part.code) { %>
+                        <pre class="help_code"><code><%= part.code %></code></pre>
+                        <% } %>
+                    <% } %>
+                    </section>
+                <% } %>
+
+                    <p class="help_next">
+                    <% const other = levels.filter((l) => l.key !== level.key); %>
+                        Too shallow or too deep? Read the same site as
+                    <% other.forEach((l, i) => { %><a href="/help?level=<%= l.key %>"><%= l.name.toLowerCase() %></a><%= i < other.length - 1 ? " or " : "" %><% }) %>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include("includes/footer.ejs") %>
+</body>
+</html>

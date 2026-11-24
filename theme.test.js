@@ -271,8 +271,10 @@ test("all text uses Plex: the body and every monospace stack", () => {
 });
 
 test("no page loads fonts from another site", () => {
-    let pages = readdirSync(new URL("./views", import.meta.url)).filter((f) => f.endsWith(".ejs")).map((f) => read(`./views/${f}`))
-        .concat(readdirSync(new URL("./views/includes", import.meta.url)).map((f) => read(`./views/includes/${f}`)), CSS);
+    // Every template, however deep: includes/figures holds the help drawings.
+    let templates = (dir) => readdirSync(new URL(`./${dir}`, import.meta.url), { withFileTypes: true })
+        .flatMap((f) => f.isDirectory() ? templates(`${dir}/${f.name}`) : f.name.endsWith(".ejs") ? [`${dir}/${f.name}`] : []);
+    let pages = templates("views").map((v) => read(`./${v}`)).concat(CSS);
     for (const page of pages) assert.ok(!/fonts\.(googleapis|gstatic)\.com|use\.typekit|fonts\.bunny/.test(page));
 });
 
