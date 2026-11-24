@@ -327,6 +327,29 @@ again:** finished files are skipped, half-loaded ones are redone. Use
 `--reload` to redo a finished file on purpose; running it plain would add its
 rows twice.
 
+**Draw the pictures.** Every structure gets one square picture, drawn the
+same way by `db/render_thumbnails.py`, and served from
+`public/assets/thumbs/<ID>.png`: the nucleic acid as a cartoon, RNA blue and
+DNA orange with the strands a shade apart, stood upright on its longest axis,
+and any protein behind it as a pale ghost. It needs PyMOL, which is not a dependency of
+the website and is installed on its own:
+
+```bash
+python3 -m venv .pmvenv && .pmvenv/bin/pip install pymol-open-source numpy
+.pmvenv/bin/python db/render_thumbnails.py \
+    --cif-dir /path/to/dnatco_files --out public/assets/thumbs
+```
+
+About one second for a duplex and up to a minute for a ribosome, so the whole
+set takes a few hours. **If a run stops, run it again:** a structure whose
+picture is already there is skipped. `--force` redraws it anyway, `--cif one.cif`
+does a single file, `--limit 20` does enough to look at.
+
+An entry with no picture yet shows the empty slot it showed before, so the set
+can be filled in while the site is running. What the picture shows, and the
+three rules that keep the set comparable, are in the file's own opening
+comment.
+
 **Change the schema.** Add the next numbered file to `db/migrations/`, like
 `015_what_it_does.sql`, then run:
 
@@ -448,6 +471,7 @@ the browser draws.** What counts as a match, the order, the page size: all in
 | `migrations/*.sql` | the schema, one file per change, applied in number order (001 to 014) |
 | `migrate.mjs` | applies what has not run yet. Safe to run twice. |
 | `load_cif.py` | reads DNATCO CIF files into 39 tables |
+| `render_thumbnails.py` | draws one standard picture per structure into `public/assets/thumbs` |
 | `seed.sql` | the 120 sample entries, for development and tests. Made by `make_seed.mjs`. |
 
 **Pages**, in `views/` (built on the server, never downloadable):

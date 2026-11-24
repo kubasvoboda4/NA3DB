@@ -192,14 +192,39 @@ let method_labels = {
 // One result as a card: the label and value rows detail.js built on the
 // server, so a card and the structure page cannot describe the same entry
 // differently. Clicking anywhere on it opens that page.
+// The picture of one structure, made by db/render_thumbnails.py and served
+// from /assets/thumbs. Every entry gets the same drawing: the nucleic acid as
+// a cartoon, RNA in blue and DNA in orange, a shade apart for each strand,
+// stood up so its longest axis runs down the frame.
+//
+// An entry whose picture has not been drawn yet keeps the empty slot it had
+// before: the image removes itself on error rather than leaving a broken
+// icon, so the two can live side by side while the set is being filled in.
+function picture_html(pdb_id) {
+    let id = String(pdb_id).toUpperCase();
+    let src = `/assets/thumbs/${encodeURIComponent(id)}.png`;
+    return `<img class="structure_thumb" src="${escape_html(src)}" alt="" loading="lazy" decoding="async">`;
+}
+
+// An image that does not exist would otherwise show the browser's broken
+// icon. One listener on the document catches them all: `error` does not
+// bubble, but it does reach a listener in the capture phase, so this works
+// for cards drawn long after the page loaded.
+document.addEventListener("error", function (event) {
+    let img = event.target;
+    if (img instanceof HTMLImageElement && img.classList.contains("structure_thumb")) {
+        img.remove();
+    }
+}, true);
+
 // Fields the card's head already says, so they are not repeated below it.
 const CARD_HEAD = new Set(["title", "method", "deposition_date", "resolution", "polymer_type"]);
 const fmt = (v) => Number(v).toLocaleString("en-GB");
 
-// One result as a card: a blank picture slot on the left, kept for a snapshot
-// of the 3D structure; on the right the id and title, a row of the numbers a
-// reader compares first, then a row of every other field. The whole card opens
-// the structure page; the id is also a real link, for a new tab or a keyboard.
+// One result as a card: a picture of the structure on the left; on the right
+// the id and title, a row of the numbers a reader compares first, then a row
+// of every other field. The whole card opens the structure page; the id is
+// also a real link, for a new tab or a keyboard.
 function card_html(entry) {
     let id = escape_html(entry.pdb_id);
     let url_id = encodeURIComponent(entry.pdb_id);
@@ -242,7 +267,7 @@ function card_html(entry) {
 
     return `
         <article class="result_card" data-id="${id}">
-            <div class="card_picture" aria-hidden="true"></div>
+            <div class="card_picture" aria-hidden="true">${picture_html(entry.pdb_id)}</div>
             <div class="card_head">
                 <h3 class="card_id"><a href="/structure/${url_id}">${id}</a>${entry.polymer_type ? ` <span class="card_badge">${escape_html(entry.polymer_type)}</span>` : ""}</h3>
                 <p class="card_title">${escape_html(entry.title)}</p>
@@ -297,7 +322,7 @@ function tile_html(entry) {
 
     return `
         <a class="grid_tile" data-id="${id}" href="/structure/${url_id}">
-            <span class="grid_tile_picture" aria-hidden="true"></span>
+            <span class="grid_tile_picture" aria-hidden="true">${picture_html(entry.pdb_id)}</span>
             <span class="grid_tile_text">
                 <b>${id}</b>
                 <span class="grid_tile_title">${escape_html(entry.title)}</span>
